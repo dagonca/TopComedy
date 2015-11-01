@@ -7,14 +7,40 @@
 //
 
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
 
 @implementation AppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    
+    [Parse setApplicationId:@"V5Mh8EI7M68rT9mh7vXzcQtZja3twS022NP41lmy"
+                  clientKey:@"33RlPlWanrzm3pxfyOvjduAMcPMr7Y0LcAdMUfpn"];
+    [application registerForRemoteNotificationTypes:UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound];
+    
+    sleep(1);
+    
     return YES;
 }
+-(void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo{
+    
+    [PFPush handlePush:userInfo];
+}
+
+-(void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken{
+    [PFPush storeDeviceToken:deviceToken];
+    [PFPush subscribeToChannelInBackground:@""];
+    
+}
+
+-(void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error{
+    UIAlertView *failed = [[UIAlertView alloc]initWithTitle:@"Error" message:@"Imposible conectar con el servidor" delegate:self cancelButtonTitle:@"Ok" otherButtonTitles: nil];
+    [failed show];
+    
+}
+
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {
